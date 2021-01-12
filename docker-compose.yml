@@ -1,0 +1,35 @@
+version: "3.4"
+   
+services:
+  db:
+    image: mysql:5.7
+    container_name: portfolio_db
+    volumes:
+      - db_data:/var/lib/mysql
+    ports: 
+      - 3409:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DB_USER_ROOT}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PASS}
+    networks: 
+      - default
+
+  api:
+    build: .
+    # command: python manage.py runserver 0.0.0.0:8000
+    env_file: .env
+    volumes:
+      - .:/home/esteban/mcei/portfolio
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    links: 
+      - db:db
+
+volumes: 
+  db_data:
+
+  
